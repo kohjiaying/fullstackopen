@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PersonServices from './services/persons'
 
-const PersonForm = ({persons, setPersons}) => {
+const PersonForm = ({persons, setPersons, setErrorMessage, setColorError}) => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
 
@@ -18,12 +18,19 @@ const PersonForm = ({persons, setPersons}) => {
             console.log('personToUpdate', personObject)
             console.log('personId', personId)
             PersonServices
-              .updatePerson(personId, personObject)
+              .updatePerson(personId, personObject, setErrorMessage)
               .then(returnedPerson => {
                 setPersons(persons.map(person => person.id !== personId ? person : returnedPerson))
                 setNewName('')
                 setNewNumber('')
               })
+            .catch((error) => {
+              setColorError(true)
+              setErrorMessage(`${updatedPerson.name} was already deleted from server.`)
+              setTimeout(() => {
+                setErrorMessage(null)
+              }, 5000)
+            })
           }
 
         }
@@ -39,7 +46,10 @@ const PersonForm = ({persons, setPersons}) => {
               setPersons(persons.concat(returnedPerson))
               setNewName('')
               setNewNumber('')
-              alert('successfully added to phonebook!')
+              setErrorMessage('successfully added to phonebook!')
+              setTimeout(() => {
+                setErrorMessage(null)
+              }, 5000)
           })
           
         }

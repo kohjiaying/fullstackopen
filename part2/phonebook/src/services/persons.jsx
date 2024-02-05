@@ -7,4 +7,26 @@ const getAll = () => {
     return request.then(response => response.data)
 }
 
-export default {getAll}
+const createPerson = (personObject) => {
+    const request = axios.post(baseURL, personObject)
+    return request.then(response => response.data)   
+}
+
+const removePerson = (id) => {
+    const request = axios.delete(`${baseURL}/${id}`)
+    return request.then(response => response.data)
+}
+
+const updatePerson = (id, personObject) => {
+    const request = axios.put(`${baseURL}/${id}`, personObject)
+    return request
+        .then(response => response.data)
+        .catch(error => {
+            console.log('fail', error)
+            alert(
+                `the person '${personObject.name}' was already deleted from server`
+            )
+        })
+}
+
+export default {getAll, createPerson, removePerson, updatePerson}

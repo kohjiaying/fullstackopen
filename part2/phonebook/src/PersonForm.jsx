@@ -25,6 +25,7 @@ const PersonForm = ({persons, setPersons, setErrorMessage, setColorError}) => {
                 setNewNumber('')
               })
             .catch((error) => {
+              console.log('erorr with update', error)
               setColorError(true)
               setErrorMessage(`${updatedPerson.name} was already deleted from server.`)
               setTimeout(() => {
@@ -38,7 +39,6 @@ const PersonForm = ({persons, setPersons, setErrorMessage, setColorError}) => {
           const personObject = {
             name: newName,
             number: newNumber,
-            id: (persons.length + 1).toString()
           }
           PersonServices
             .createPerson(personObject)

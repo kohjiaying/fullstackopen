@@ -150,7 +150,34 @@ test('a blog can be deleted', async () => {
     const titles = blogsAtEnd.map(r => r.title)
   
     expect(titles).not.toContain(blogToDelete.title)
-  })
+})
+
+test('blog can be updated', async () => {
+    const initialBlogs = await api.get('/api/blogs')
+    console.log('initial number of posts', initialBlogs.body.length)
+    const updateBlog = {
+        title: "A lonely night",
+        author: "James Martin",
+        url: "www.blogShare.com/aLonelyNight",
+        likes: 334,
+        id: "65c2df64e175db0fc5a61f72"
+    }
+
+    await api
+        .put('/api/blogs/65c2df64e175db0fc5a61f72')
+        .send(updateBlog)
+        .expect(201)
+
+    const blogsAtEnd = await helper.blogInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+    const resultBlog = await api
+      .get(`/api/blogs/65c2df64e175db0fc5a61f72`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  
+    expect(resultBlog.body).toEqual(updateBlog)
+
+})
   
 afterAll(async () => {
   await mongoose.connection.close()

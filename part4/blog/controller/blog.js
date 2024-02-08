@@ -25,10 +25,10 @@ blogRouter.post('/', middleware.userExtractor, async (request, response) => {
   console.log('getting token...')
   const token = request.token
   console.log('token gottens')
-  // const decodedToken = jwt.verify(token, config.SECRET)
-  // if (!decodedToken.id) {
-  //   return response.status(401).json({ error: 'token invalid' })
-  // }
+  const decodedToken = jwt.verify(token, config.SECRET)
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
   // const user = await User.findById(decodedToken.id)
   const user = request.user
   const blog = new Blog({
